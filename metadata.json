@@ -1,0 +1,7 @@
+{
+  "name": "AURA: Jarvis Interface",
+  "description": "A sophisticated, voice-enabled AI assistant interface inspired by Jarvis, featuring system command simulation and atmospheric UI.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
