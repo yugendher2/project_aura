@@ -49,14 +49,17 @@ export interface AuraAudioResponse {
 }
 
 export class AuraService {
-  private ai: GoogleGenAI;
-
-  constructor() {
-    this.ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || "" });
+  private getClient() {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      throw new Error("GEMINI_API_KEY is not defined in the environment.");
+    }
+    return new GoogleGenAI({ apiKey });
   }
 
   async processCommand(message: string) {
-    const response = await this.ai.models.generateContent({
+    const ai = this.getClient();
+    const response = await ai.models.generateContent({
       model: "gemini-3-flash-preview",
       contents: [{ role: "user", parts: [{ text: message }] }],
       config: {
@@ -70,7 +73,8 @@ export class AuraService {
 
   async speak(text: string): Promise<AuraAudioResponse | null> {
     try {
-      const response = await this.ai.models.generateContent({
+      const ai = this.getClient();
+      const response = await ai.models.generateContent({
         model: "gemini-2.5-flash-preview-tts",
         contents: [{ parts: [{ text: `Say with a sophisticated, helpful assistant tone: ${text}` }] }],
         config: {
